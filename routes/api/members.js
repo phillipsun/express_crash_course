@@ -34,6 +34,8 @@ router.post('/', (req, res) => {
 
   members.push(newMember);
   res.json(members);
+
+  // For the front end redirect after form submission
   // res.redirect('/');
 });
 
