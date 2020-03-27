@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Homepage Route (usually it's either this or setting a static folder below)
+// however both can be used, putting both in this file is just for demonstration purposes
 app.get('/', (req, res) => {
   res.render('index', {
     title: 'Members App',
