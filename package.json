@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "test": "mocha",
+    "coverage": "nyc -a --skip-empty npm run test --exit"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +19,10 @@
     "uuid": "^7.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "chai-http": "^4.3.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.1.0"
   }
 }
