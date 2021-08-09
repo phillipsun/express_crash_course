@@ -7,13 +7,14 @@
     "start": "node index",
     "dev": "nodemon index",
     "test": "mocha",
-    "coverage": "nyc -a --skip-empty npm run test --exit"
+    "coverage": "nyc -a --skip-empty npm test --exit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
     "express-handlebars": "^4.0.0",
     "moment": "^2.24.0",
     "uuid": "^7.0.2"

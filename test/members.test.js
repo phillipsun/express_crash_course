@@ -1,13 +1,10 @@
-var assert = require('assert')
-var chai = require('chai'),
-  chaiHttp = require('chai-http')
-var expect = chai.expect
-var fs = require('fs')
+const chai = require('chai')
+const chaiHttp = require('chai-http')
+const expect = chai.expect
+const fs = require('fs')
 const path = require('path')
-var memberList = require('../Members')
-var app = require('../index')
-const logger = require('../middleware/logger')
-
+const memberList = require('../Members')
+const app = require('../index')
 chai.use(chaiHttp)
 
 describe('Unit Tests', function () {
@@ -31,8 +28,6 @@ describe('Unit Tests', function () {
       .get('/api/members')
       .end(function (err, res) {
         expect(res).to.have.status(200)
-        // console.log(res.body);
-        // console.log('res:::', res);
         expect(res.body).to.be.an('array')
         done()
       })
@@ -44,8 +39,6 @@ describe('Unit Tests', function () {
       .get('/api/members/1')
       .end(function (err, res) {
         expect(res).to.have.status(200)
-        // console.log(res.body);
-        // console.log('res:::', res);
         expect(res.body).to.be.an('array')
         done()
       })
@@ -65,28 +58,15 @@ describe('Unit Tests', function () {
     chai
       .request(app)
       .post('/api/members')
-      // .send({
-      //   '_method': 'put',
-      //   'password': '123',
-      //   'confirmPassword': '123'
-      // })
-      // .attach('file', fs.readFileSync(path.join(__dirname, 'mytextfile.txt')), 'mytextfile.txt')
-      // .end(function (err, res) {
-      //   // expect(res).to.have.status(200)
-      //   console.log(res.body);
-      //   console.log('res:::', res);
-      //   done()
-      // })
       .set('content-type', 'application/json')
       .send({name: 'Phil', email: 'psun@gmail.com'})
       .end(function(err, res) {
-        console.log(res.body)
         expect(res.body).to.be.an('array')
         done()
       })
   })
 
-  it('POST new member should return an array', (done) => {
+  it('POST new member should return 400 if name or email is missing', (done) => {
     chai
       .request(app)
       .post('/api/members')
@@ -98,28 +78,15 @@ describe('Unit Tests', function () {
       })
   })
 
-  it('DELETE member should return an array', (done) => {
+  it('DELETE member should return an object', (done) => {
     chai
       .request(app)
       .delete('/api/members/2')
-      // .send({
-      //   '_method': 'put',
-      //   'password': '123',
-      //   'confirmPassword': '123'
-      // })
-      // .attach('file', fs.readFileSync(path.join(__dirname, 'mytextfile.txt')), 'mytextfile.txt')
-      // .end(function (err, res) {
-      //   // expect(res).to.have.status(200)
-      //   console.log(res.body);
-      //   console.log('res:::', res);
-      //   done()
-      // })
       .end(function(err, res) {
         expect(res.body).to.be.an('object')
         done()
       })
   })
-
 
   it('DELETE invalid member should return 400', (done) => {
     let testId = 'abc'
@@ -132,10 +99,7 @@ describe('Unit Tests', function () {
       })
   })
 
-
-
-
-  it('PUT member should return an array', (done) => {
+  it('PUT member should return an object with valid id/name/email', (done) => {
     chai
       .request(app)
       .put('/api/members/2')
@@ -143,11 +107,12 @@ describe('Unit Tests', function () {
       .send({ name: 'RandomName', email: 'hello@gmail.com' })
       .end(function(err, res) {
         expect(res.body).to.be.an('object')
+        expect(res).to.have.status(200)
         done()
       })
   })
 
-  it('PUT member should return an array', (done) => {
+  it('PUT member should return an object when passing valid ID and empty string for name/email', (done) => {
     chai
       .request(app)
       .put('/api/members/2')
@@ -155,10 +120,10 @@ describe('Unit Tests', function () {
       .send({ name: '', email: '' })
       .end(function(err, res) {
         expect(res.body).to.be.an('object')
+        expect(res).to.have.status(200)
         done()
       })
   })
-
 
   it('PUT invalid member should return 400', (done) => {
     let testId = 'abc'
@@ -167,6 +132,27 @@ describe('Unit Tests', function () {
       .put(`/api/members/${testId}`)
       .end(function(err, res) {
         expect(res).to.have.status(400)
+        done()
+      })
+  })
+
+  it('POST to upload route should return a 200', (done) => {
+    chai
+      .request(app)
+      .post('/upload')
+      .attach('file', fs.readFileSync(path.resolve(__dirname, '../demoFile.html')), 'demoFile.html')
+      .end(function(err, res) {
+        expect(res).to.have.status(200)       
+        done()
+      })
+  })
+
+  it('POST to upload route should return a 500', (done) => {
+    chai
+      .request(app)
+      .post('/upload')
+      .end(function(err, res) {
+        expect(res).to.have.status(500)       
         done()
       })
   })
